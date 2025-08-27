@@ -5,8 +5,6 @@ namespace SolidHitboxes
 {
     public static class FFDamageHandler
     {
-        public static bool AIFriendlyFireEnabled { get; set; }
-
         public static void ModifyDamage(IDestructible target, HitData hit)
         {
             try
@@ -20,7 +18,7 @@ namespace SolidHitboxes
                     return;
                 }
                 
-                if (AIFriendlyFireEnabled || 
+                if (Plugin.FFEnabled || 
                     attacker?.GetBaseAI() is not MonsterAI ||
                     targetChar?.GetBaseAI() is not MonsterAI) return;
 
@@ -32,7 +30,7 @@ namespace SolidHitboxes
                 }
             } catch(Exception e)
             {
-                Debug.LogError($"AI FF error: Attacker: {hit?.GetAttacker()}, Target ({target}).\nError message: {e.Message}");
+                Debug.LogError($"FFDamageHandler error: Attacker: {hit?.GetAttacker()}, Target ({target}).\nError message: {e.Message}");
             }
         }
     }

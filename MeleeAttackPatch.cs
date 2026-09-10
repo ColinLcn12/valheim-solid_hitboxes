@@ -31,12 +31,11 @@ namespace SolidHitboxes
                 if (applyDamageIndex > -1)
                 {
                     var hookPatch = new List<CodeInstruction>();
-                    hookPatch.Add(new CodeInstruction(OpCodes.Ldloc_S, 33));
-                    hookPatch.Add(new CodeInstruction(OpCodes.Ldloc_S, 38));
                     hookPatch.Add(new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(FFDamageHandler), nameof(FFDamageHandler.ModifyDamage))));
+                    hookPatch.Add(new CodeInstruction(OpCodes.Ldloc_S, 34));
+                    hookPatch.Add(new CodeInstruction(OpCodes.Ldloc_S, 39));
 
-                    // Apply damage method call takes 2 arguments, so move back 2 lines so we don't mess up params
-                    codeLines.InsertRange(applyDamageIndex - 2, hookPatch);
+                    codeLines.InsertRange(applyDamageIndex, hookPatch);
 
                     success = true;
                 }
@@ -47,6 +46,39 @@ namespace SolidHitboxes
             }
 
             if (!success) Debug.LogError("Patch DoMeleeAttack failed.");
+
+            return codeLines.AsEnumerable();
+        }
+
+        [HarmonyTranspiler]
+        [HarmonyPatch(typeof(Attack), "<DoAreaAttack>g__checkHits|27_0")]
+        private static IEnumerable<CodeInstruction> DoAreaAttack_Patch(IEnumerable<CodeInstruction> instructions, ILGenerator il)
+        {
+            var codeLines = new List<CodeInstruction>(instructions);
+            bool success = false;
+
+            try
+            {
+                var applyDamageIndex = codeLines.FindIndex(p => p.opcode == OpCodes.Callvirt && p.operand.ToString().Contains(" Damage(HitData)"));
+
+                if (applyDamageIndex > -1)
+                {
+                    var hookPatch = new List<CodeInstruction>();
+                    hookPatch.Add(new CodeInstruction(OpCodes.Ldloc_S, 4));
+                    hookPatch.Add(new CodeInstruction(OpCodes.Ldloc_S, 7));
+                    hookPatch.Add(new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(FFDamageHandler), nameof(FFDamageHandler.ModifyDamage))));
+
+                    codeLines.InsertRange(applyDamageIndex - 2, hookPatch);
+
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex.Message);
+            }
+
+            if (!success) Debug.LogError("Patch DoAreaAttack failed.");
 
             return codeLines.AsEnumerable();
         }

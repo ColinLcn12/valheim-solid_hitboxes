@@ -53,8 +53,8 @@ namespace SolidHitboxes
             if (applyDamageIndex > -1)
             {
                 var hookPatch = new List<CodeInstruction>();
-                hookPatch.Add(new CodeInstruction(OpCodes.Ldloc_S, 4));
-                hookPatch.Add(new CodeInstruction(OpCodes.Ldloc_S, 10));
+                hookPatch.Add(new CodeInstruction(OpCodes.Ldloc_S, 6));
+                hookPatch.Add(new CodeInstruction(OpCodes.Ldloc_S, 15));
                 hookPatch.Add(new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(FFDamageHandler), nameof(FFDamageHandler.ModifyDamage))));
 
                 // Apply damage method call takes 2 arguments, so move back 2 lines so we don't mess up params

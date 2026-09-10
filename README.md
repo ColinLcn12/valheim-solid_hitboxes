@@ -16,6 +16,9 @@ Remember to install the mod on your server if you are on dedicated server.
 
 Changelog
 -----------
+1.0.7
+- Compatibility for version 1.0
+
 1.0.6
 - Fixed mod for Call to Arms update
 

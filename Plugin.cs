@@ -10,7 +10,7 @@ namespace SolidHitboxes
     {
         private const string pluginId = "org.bepinex.plugins.solid-hitboxes";
         private const string pluginName = "Solid Hitboxes";
-        private const string pluginVersion = "1.0.6";
+        private const string pluginVersion = "1.0.7";
 
         private readonly Harmony _harmony = new Harmony(pluginId);
 
